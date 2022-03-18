@@ -102,7 +102,7 @@ this key will be generated inside our local PC's .ssh file located ~/.ssh (no pa
 
 MOVE LOCAL SSH key to target machine using our mounted directory
 
-cat ~/.ssh/id_rsa >> /tmp/nfs/root/.ssh/authorized_keys
+cat ~/.ssh/id_rsa.pub >> /tmp/nfs/root/.ssh/authorized_keys
 
 ////////////////////
 
